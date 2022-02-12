@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from datetime import timedelta
+from typing import List, Tuple
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,7 +27,7 @@ SECRET_KEY = '2^#gsrh$e)gc8s5x8=#2tamef4fty@7wl7pi!$k3uc@vs61j%#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -37,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'core',
+    'django_minio_backend',
 ]
 
 MIDDLEWARE = [
@@ -117,4 +122,31 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
+
+STATIC_ROOT = os.path.join(BASE_DIR , 'static')
 STATIC_URL = '/static/'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
+
+# ------------ MINIO ----------------
+
+MINIO_EXTERNAL_ENDPOINT = "127.0.0.1:9000"
+MINIO_EXTERNAL_ENDPOINT_USE_HTTPS = False
+MINIO_ENDPOINT = 'minio:9000'
+MINIO_ACCESS_KEY = 'minio'
+MINIO_SECRET_KEY = 'minio123'
+MINIO_PRIVATE_BUCKETS = [
+    'test',
+ 
+]
+MINIO_PUBLIC_BUCKETS = [
+    ""
+]
+MINIO_POLICY_HOOKS: List[Tuple[str, dict]] = []
+
+MINIO_URL_EXPIRY_HOURS = timedelta(days=1)
+MINIO_MEDIA_FILES_BUCKET = 'test'
